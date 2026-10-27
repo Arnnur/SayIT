@@ -79,6 +79,11 @@ class ClaudeGenerator:
                     if on_progress:
                         on_progress(received)
                 message = await stream.get_final_message()
+        except TypeError as exc:
+            # The SDK raises this before sending anything when no credentials are configured.
+            if "authentication" not in str(exc):
+                raise
+            raise GenerationError("Не задан ANTHROPIC_API_KEY (см. .env.example)") from exc
         except anthropic.AuthenticationError as exc:
             raise GenerationError("Неверный или отсутствующий ANTHROPIC_API_KEY") from exc
         except anthropic.PermissionDeniedError as exc:
