@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Say IT — сайт за минуту голосом</title>
+  <meta name="description" content="Опишите сайт голосом или текстом — ИИ создаст и опубликует его за минуту. Ссылка и QR-код сразу.">
+  <link rel="icon" href="/static/logo.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <div class="bg" aria-hidden="true"><span></span><span></span><span></span></div>
+
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="Say IT — на главную">
+      <img src="/static/logo.svg" alt="" width="36" height="36">
+      <span>Say <b>IT</b></span>
+    </a>
+    <span class="tagline">айттың — сайт іске қосылды</span>
+  </header>
+
+  <main>
+    <!-- 1. Ввод запроса -->
+    <section id="screen-input" class="screen active" aria-labelledby="hero-title">
+      <div class="hero">
+        <p class="eyebrow">ИИ-генератор сайтов</p>
+        <h1 id="hero-title">Скажи — и&nbsp;сайт <span class="grad">уже в&nbsp;интернете</span></h1>
+        <p class="lead">Опишите идею голосом или текстом. Через 30–60 секунд вы получите готовый
+          адаптивный сайт, ссылку и QR-код. Программировать не нужно.</p>
+      </div>
+
+      <form id="prompt-form" class="composer" novalidate>
+        <label for="prompt" class="visually-hidden">Опишите сайт</label>
+        <textarea id="prompt" name="prompt" rows="5" maxlength="2000" required
+          placeholder="Например: «Создай сайт для кофейни в Алматы с меню, ценами, фотографиями напитков, формой бронирования и контактами»"></textarea>
+
+        <div class="composer-bar">
+          <div class="voice">
+            <button type="button" id="mic" class="mic" aria-pressed="false" aria-label="Голосовой ввод">
+              <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path fill="currentColor" d="M12 15a3.5 3.5 0 0 0 3.5-3.5v-6a3.5 3.5 0 1 0-7 0v6A3.5 3.5 0 0 0 12 15Zm6-3.5a1 1 0 1 0-2 0 4 4 0 0 1-8 0 1 1 0 1 0-2 0 6 6 0 0 0 5 5.91V20H9a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-2v-2.59a6 6 0 0 0 5-5.91Z"/></svg>
+            </button>
+            <label for="lang" class="visually-hidden">Язык распознавания речи</label>
+            <select id="lang" title="Язык голосового ввода">
+              <option value="ru-RU">Русский</option>
+              <option value="kk-KZ">Қазақша</option>
+              <option value="en-US">English</option>
+            </select>
+            <span id="voice-status" class="voice-status" aria-live="polite"></span>
+          </div>
+          <div class="submit-group">
+            <span id="counter" class="counter">0 / 2000</span>
+            <button type="submit" id="generate" class="btn btn-primary">
+              <span>Создать сайт</span>
+              <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M13.3 5.3a1 1 0 0 1 1.4 0l6 6a1 1 0 0 1 0 1.4l-6 6a1 1 0 0 1-1.4-1.4l4.3-4.3H4a1 1 0 1 1 0-2h13.6l-4.3-4.3a1 1 0 0 1 0-1.4Z"/></svg>
+            </button>
+          </div>
+        </div>
+      </form>
+
+      <div class="examples" aria-label="Примеры запросов">
+        <span>Попробуйте:</span>
+        <button type="button" class="chip" data-example="Создай сайт для кофейни «Арома» в Алматы: меню с ценами в тенге, фотографии напитков, форма бронирования столика, адрес и контакты">☕ Кофейня</button>
+        <button type="button" class="chip" data-example="Сайт-портфолио свадебного фотографа: галерея работ, пакеты услуг с ценами, отзывы клиентов и форма заявки">📸 Фотограф</button>
+        <button type="button" class="chip" data-example="Лендинг барбершопа в Астане: услуги и цены, мастера, запись онлайн, адрес на карте и ссылка на WhatsApp">💈 Барбершоп</button>
+        <button type="button" class="chip" data-example="Лендинг онлайн-курса по Python для школьников: программа по неделям, преподаватели, тарифы, FAQ и форма записи">🐍 IT-курс</button>
+      </div>
+
+      <ul class="features">
+        <li><b>🎤 Голос или текст</b><span>Русский, қазақша, English</span></li>
+        <li><b>⚡ 30–60 секунд</b><span>От идеи до живого сайта</span></li>
+        <li><b>📱 Адаптивный</b><span>ПК, планшет и телефон</span></li>
+        <li><b>🔗 Ссылка и QR</b><span>Отправьте или покажите</span></li>
+      </ul>
+    </section>
+
+    <!-- 2. Генерация -->
+    <section id="screen-loading" class="screen" aria-live="polite" aria-labelledby="loading-title">
+      <div class="loading-card">
+        <div class="orb" aria-hidden="true"><span></span><span></span><span></span></div>
+        <h2 id="loading-title">Создаём ваш сайт</h2>
+        <p id="loading-message" class="loading-message">Отправляем запрос…</p>
+
+        <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-labelledby="loading-title">
+          <div id="progress-bar" class="progress-bar"></div>
+        </div>
+        <div class="progress-meta">
+          <span id="progress-chars"></span>
+          <span id="progress-time">0 с</span>
+        </div>
+
+        <ol class="steps" id="steps">
+          <li data-step="generating">ИИ пишет дизайн и код</li>
+          <li data-step="images">Подбор изображений</li>
+          <li data-step="publishing">Публикация в интернете</li>
+          <li data-step="done">Ссылка и QR-код</li>
+        </ol>
+
+        <blockquote id="loading-prompt" class="loading-prompt"></blockquote>
+
+        <div id="loading-error" class="error-box" hidden>
+          <p id="loading-error-text"></p>
+          <button type="button" id="retry" class="btn btn-primary">Попробовать ещё раз</button>
+          <button type="button" id="back-edit" class="btn btn-ghost">Изменить запрос</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Результат -->
+    <section id="screen-result" class="screen" aria-labelledby="result-title">
+      <div class="result-head">
+        <div>
+          <p class="eyebrow">Сайт опубликован ✨</p>
+          <h2 id="result-title">Ваш сайт</h2>
+        </div>
+        <div class="result-actions">
+          <div class="devices" role="group" aria-label="Размер предпросмотра">
+            <button type="button" class="device active" data-device="desktop" aria-pressed="true" title="Компьютер">🖥️<span>ПК</span></button>
+            <button type="button" class="device" data-device="tablet" aria-pressed="false" title="Планшет">📲<span>Планшет</span></button>
+            <button type="button" class="device" data-device="mobile" aria-pressed="false" title="Телефон">📱<span>Телефон</span></button>
+          </div>
+          <a id="open-tab" class="btn btn-ghost" href="#" target="_blank" rel="noopener">Открыть ↗</a>
+          <button type="button" id="new-site" class="btn btn-primary">Новый сайт</button>
+        </div>
+      </div>
+
+      <div class="result-grid">
+        <div class="preview-wrap">
+          <div id="preview-frame" class="preview-frame" data-device="desktop">
+            <div class="frame-bar" aria-hidden="true"><i></i><i></i><i></i><span id="frame-url"></span></div>
+            <iframe id="preview" title="Предпросмотр сайта" loading="lazy"
+              sandbox="allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals"></iframe>
+          </div>
+        </div>
+
+        <aside class="share">
+          <h3>Поделиться</h3>
+          <label for="site-url" class="share-label">Ссылка на сайт</label>
+          <div class="copy-row">
+            <input id="site-url" type="text" readonly>
+            <button type="button" id="copy" class="btn btn-primary">Копировать</button>
+          </div>
+          <p id="warning" class="warning" hidden></p>
+
+          <div class="qr-box">
+            <img id="qr" alt="QR-код со ссылкой на сайт" width="220" height="220">
+            <p>Наведите камеру телефона, чтобы открыть сайт</p>
+            <a id="qr-download" class="btn btn-ghost" href="#" download>⬇ Скачать QR-код</a>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="/static/app.js" defer></script>
+</body>
+</html>
